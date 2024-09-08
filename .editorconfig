@@ -1,5 +1,0 @@
-root = true
-
-[*.c]
-max_line_lenght = 120
-indent_size = 4
