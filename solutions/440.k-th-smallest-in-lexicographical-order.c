@@ -1,10 +1,9 @@
 #include <stdlib.h>
 
 // @leet start
-int* lexicalOrder(int n, int* returnSize) {
-  int* result = malloc(n * sizeof(int));
+int findKthNumber(int n, int k) {
+  long* result = malloc(n * sizeof(long));
 
-  result[0] = 1;
   for (int k = 1; k < n; k++) {
     if (result[k - 1] * 10 <= n) {
       result[k] = result[k - 1] * 10;
@@ -24,7 +23,6 @@ int* lexicalOrder(int n, int* returnSize) {
     result[k]++;
   }
 
-  *returnSize = n;
-  return result;
+  return result[k - 1];
 }
 // @leet end
