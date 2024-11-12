@@ -1,39 +1,41 @@
 #include <stdlib.h>
 
 // @leet start
-int priceCompare(const void* first, const void* second) {
-  int* item1 = *(int**)first;
-  int* item2 = *(int**)second;
-
+int priceCompare(const void* a, const void* b) {
+  int* item1 = *(int**)a;
+  int* item2 = *(int**)b;
+  if (item1[0] == item2[0]) return item1[1] - item2[1];
   return item1[0] - item2[0];
 }
 
-int queryCompare(const void* a, const void* b) { return *(int*)a - *(int*)b; }
-
 int* maximumBeauty(int** items, int itemsSize, int* itemsColSize, int* queries, int queriesSize, int* returnSize) {
-  qsort(items, itemsSize, itemsColSize[0] * sizeof(int), priceCompare);
-  qsort(queries, queriesSize, sizeof(int), queryCompare);
+  qsort(items, itemsSize, sizeof(int*), priceCompare);
 
-  int** sortedItems = items;
-  int* sortedQueries = queries;
+  int* maxBeauty = (int*)malloc(itemsSize * sizeof(int));
 
-  int* answer = malloc(sizeof(int) * queriesSize);
-
-  int j = 1;
-  int max = sortedItems[0][1];
-
-  for (int i = 0; i < queriesSize; i++) {
-    while (sortedItems[j][0] <= sortedQueries[i] && j < queriesSize) {
-      if (sortedItems[j][1] > max) {
-        max = sortedItems[j + 1][1];
-      }
-
-      j++;
-    }
-
-    answer[i] = max;
+  maxBeauty[0] = items[0][1];
+  for (int i = 1; i < itemsSize; i++) {
+    maxBeauty[i] = (maxBeauty[i - 1] > items[i][1]) ? maxBeauty[i - 1] : items[i][1];
   }
 
+  int* answer = (int*)malloc(queriesSize * sizeof(int));
+
+  for (int i = 0; i < queriesSize; i++) {
+    int left = 0;
+    int right = itemsSize - 1;
+    while (left <= right) {
+      int mid = (left + right) / 2;
+      if (items[mid][0] <= queries[i]) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+    answer[i] = (right >= 0) ? maxBeauty[right] : 0;
+  }
+
+  free(maxBeauty);
+  *returnSize = queriesSize;
   return answer;
 }
 // @leet end
