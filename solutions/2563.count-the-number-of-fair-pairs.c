@@ -7,35 +7,38 @@ int compare(const void *a, const void *b) { return *((int *)a) - *((int *)b); }
 long long countFairPairs(int *nums, int numsSize, int lower, int upper) {
   qsort(nums, numsSize, sizeof(int), compare);
   
-  int count = 0;
+  long long count = 0;
   for (int i = 0; i < numsSize - 1; i++) {
     int left = i + 1;
-    int right = numsSize;
-    int mid;
+    int right = numsSize - 1;
+
     while (left <= right) {
       int mid = (left + right) / 2;
-      int sum = nums[i] + nums[mid];
-      if (sum > upper) {
+      if (nums[i] + nums[mid] >= lower) {
         right = mid - 1;
-        continue;
-      }
-
-      if (sum < lower) {
+      } else {
         left = mid + 1;
-        continue;
       }
+    }
 
-      count++;
+    int lowIndex = left;
+    
+    left = i + 1;
+    right = numsSize - 1;
 
-      int k = mid - 1;
-      while (nums[i] + nums[k] >= lower) {
-        count++;
+    while (left <= right) {
+      int mid = (left + right) / 2;
+      if (nums[i] + nums[mid] <= upper) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
       }
-      
-      k = mid + 1;
-      while (nums[i] + nums[k] <= lower) {
-        count++;
-      }
+    }
+
+    int highIndex = right;
+
+    if (lowIndex <= highIndex) {
+      count += (highIndex - lowIndex + 1);
     }
   }
 
