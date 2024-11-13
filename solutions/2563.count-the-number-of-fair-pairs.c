@@ -25,8 +25,17 @@ long long countFairPairs(int *nums, int numsSize, int lower, int upper) {
         continue;
       }
 
-      for (int i)
+      count++;
 
+      int k = mid - 1;
+      while (nums[i] + nums[k] >= lower) {
+        count++;
+      }
+      
+      k = mid + 1;
+      while (nums[i] + nums[k] <= lower) {
+        count++;
+      }
     }
   }
 
