@@ -1,9 +1,9 @@
-#include <stdlib.h>
-#include <stdbool.h>
 #include <limits.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 // @leet start
-typedef struct{
+typedef struct {
   int index;
   long long prefixSum;
 } Element;
@@ -11,7 +11,7 @@ typedef struct{
 typedef struct {
   Element *data;
   int front, rear, size, capacity;
-}
+} Deque;
 
 Deque *createDeque(int capacity) {
   Deque *deque = (Deque *)malloc(sizeof(Deque));
@@ -23,9 +23,7 @@ Deque *createDeque(int capacity) {
   return deque;
 }
 
-int isEmpty(Deque *deque) {
-  return deque->size == 0;
-}
+int isEmpty(Deque *deque) { return deque->size == 0; }
 
 void pushBack(Deque *deque, Element elem) {
   deque->rear = (deque->rear + 1) % deque->capacity;
@@ -40,13 +38,9 @@ Element popFront(Deque *deque) {
   return elem;
 }
 
-Element back(Deque *deque) {
-  return deque->data[deque->rear];
-}
+Element back(Deque *deque) { return deque->data[deque->rear]; }
 
-Element front(Deque *deque) {
-  return deque->data[deque->front];
-}
+Element front(Deque *deque) { return deque->data[deque->front]; }
 
 void popBack(Deque *deque) {
   deque->rear = (deque->rear - 1 + deque->capacity) % deque->capacity;
@@ -58,9 +52,9 @@ void freeDeque(Deque *deque) {
   free(deque);
 }
 
+int shortestSubarray(int *nums, int numsSize, int k) {
+  long long *prefixSum = (long long *)malloc((numsSize + 1) * sizeof(long long));
 
-int shortestSubarray(int* nums, int numsSize, int k) {
-  long long *prefixSum = (long long *)malloc(numsSize * sizeof(long long));
   prefixSum[0] = 0;
   for (int i = 0; i < numsSize; i++) {
     prefixSum[i + 1] = prefixSum[i] + nums[i];
@@ -86,7 +80,7 @@ int shortestSubarray(int* nums, int numsSize, int k) {
 
   free(prefixSum);
   freeDeque(deque);
-  
+
   return minLength == INT_MAX ? -1 : minLength;
 }
 // @leet end
