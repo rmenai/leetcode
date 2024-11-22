@@ -1,7 +1,3 @@
-#include <stdlib.h>
-
 // @leet start
-int maxEqualRowsAfterFlips(int** matrix, int matrixSize, int* matrixColSize) {
-    
-}
+int maxEqualRowsAfterFlips(int** matrix, int matrixSize, int* matrixColSize) {}
 // @leet end
