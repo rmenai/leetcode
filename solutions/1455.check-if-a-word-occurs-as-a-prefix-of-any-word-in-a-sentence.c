@@ -27,7 +27,6 @@ int isPrefixOfWord(char* sentence, char* searchWord) {
     }
 
     wordIndex = 0;
-    isPrefix = false;
   }
 
   return -1;
