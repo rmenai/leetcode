@@ -6,9 +6,9 @@
 typedef struct Num {
   int value;
   int index;
-  struct Num next;
-  struct Num previous;
-
+  struct Num *next;
+  struct Num *previous;
+  bool marked;
 } number;
 
 int compar(const void *a, const void *b) {
@@ -28,10 +28,14 @@ long long findScore(int* nums, int numsSize) {
   number **sortedNums = (number **)malloc(numsSize * sizeof(number *));
   
   for (int i = 0; i < numsSize; i++) {
-    sortedNums[i] = (number *)malloc(sizeof(number *);
+    sortedNums[i] = (number *)malloc(sizeof(number));
 
     sortedNums[i]->value = nums[i];
     sortedNums[i]->index = i; 
+    sortedNums[i]->marked = false;
+  }
+
+  for (int i = 0; i < numsSize; i++){
     sortedNums[i]->previous = i > 0 ? sortedNums[i - 1] : NULL; 
     sortedNums[i]->next = i < numsSize - 1 ? sortedNums[i + 1] : NULL;
   }
@@ -41,15 +45,21 @@ long long findScore(int* nums, int numsSize) {
   long long score = 0;
   for (int i = 0; i < numsSize; i++) {
     number *num = sortedNums[i];
-    if (num.) {
-      score += sortedNums[i][1];
+    if (!num->marked) {
+      score += num->value;
 
-      int before = sortedNums[i][0] - 1;
-      int after = sortedNums[i][0] + 1;
+      if (num->previous != NULL) {
+        num->previous->marked = true;
+      }
 
-      if (before >= 0) mark(sortedNums, numsSize, nums[before]);
-      if (after < numsSize) mark(sortedNums, numsSize, nums[after]);
+      if (num->next != NULL) {
+        num->next->marked = true;
+      }
     }
+  }
+
+  for (int i = 0; i < numsSize; i++) {
+    free(sortedNums[i]);
   }
 
   free(sortedNums);
