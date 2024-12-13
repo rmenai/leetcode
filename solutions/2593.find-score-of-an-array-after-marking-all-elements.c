@@ -1,14 +1,23 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
 // @leet start
-int compar(const void *a, const void *b) {
-  int *first = *(int **)a;
-  int *second = *(int **)b;
 
-  int diff = first[1] - second[1];
+typedef struct Num {
+  int value;
+  int index;
+  struct *Num next;
+  struct *Num previous;
+} number;
+
+int compar(const void *a, const void *b) {
+  int *first = *(number **)a;
+  int *second = *(number **)b;
+
+  int diff = first->value - second->value;
 
   if (diff == 0) {
-    return first[0] - second[0];
+    return first->index - second->index;
   }
 
   return diff;
@@ -35,20 +44,22 @@ int compar(const void *a, const void *b) {
 // }
 
 long long findScore(int* nums, int numsSize) {
-  int **sortedNums = (int **)malloc(numsSize * sizeof(int *));
+  int **sortedNums = (number **)malloc(numsSize * sizeof(number *));
   
   for (int i = 0; i < numsSize; i++) {
-    sortedNums[i] = (int *)malloc(3 * sizeof(int));
+    sortedNums[i] = (number *)malloc(sizeof(number *);
 
-    sortedNums[i][0] = i;
-    sortedNums[i][1] = nums[i];
-    sortedNums[i][2] = 0;
+    sortedNums[i]->value = nums[i];
+    sortedNums[i]->index = i; 
+    sortedNums[i]->previous = i > 0 ? sortedNums[i - 1] : NULL; 
+    sortedNums[i]->next = i < numsSize - 1 ? sortedNums[i + 1] : NULL;
   }
 
-  qsort(sortedNums, numsSize, sizeof(int *), compar);
+  qsort(sortedNums, numsSize, sizeof(number **), compar);
 
   long long score = 0;
   for (int i = 0; i < numsSize; i++) {
+    number *num = sortedNums[i];
     if (sortedNums[i][2] == 0) {
       score += sortedNums[i][1];
 
