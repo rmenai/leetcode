@@ -13,7 +13,7 @@ long long continuousSubarrays(int* nums, int numsSize) {
     if (nums[i] < min) min = nums[i];
 
     if (max - min > 2) {
-      int n = i - j;
+      long long n = i - j;
       count += n * (n + 1) / 2;
 
       j = i;
@@ -33,7 +33,7 @@ long long continuousSubarrays(int* nums, int numsSize) {
     }
   }
 
-  int n = numsSize - j;
+  long long n = numsSize - j;
   count += n * (n + 1) / 2;
   return count;
 }
