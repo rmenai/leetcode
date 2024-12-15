@@ -1,6 +1,8 @@
 #include <stdlib.h>
 
 // @leet start
+#include <float.h>
+
 struct Heap {
   double** arr;
   int size;
@@ -109,6 +111,12 @@ double maxAverageRatio(int** classes, int classesSize, int* classesColSize, int 
     int a = classes[i][0];
     int b = classes[i][1];
 
+    if (a == b) {
+      ratios[i][0] = DBL_MAX;
+      ratios[i][1] = b;
+      continue;
+    }
+
     ratios[i][0] = (double)(b * (b + 1)) / (double)(b - a);
     ratios[i][1] = b;
   }
@@ -119,19 +127,17 @@ double maxAverageRatio(int** classes, int classesSize, int* classesColSize, int 
     double *class = extractMin(hp);
     double b = class[1];
 
-    class[0] *= (b + 1) / (b - 1);
+    class[0] *= (b + 2) / (b);
     class[1] = b + 1;
-
-    return class[0];
 
     insert(hp, class);
   }
 
-  int passRatio = 0;
+  double passRatio = 0;
   for (int _ = 0; _ < classesSize; _++) {
     double *class = extractMin(hp);
     double b = class[1];
-    double ratio = (1 / class[0]) * (-b - 1) + 1;
+    double ratio = 1 - ((b + 1) / class[0]);
 
     passRatio += ratio / classesSize;
     free(class);
