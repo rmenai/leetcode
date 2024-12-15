@@ -108,8 +108,8 @@ double maxAverageRatio(int** classes, int classesSize, int* classesColSize, int 
   for (int i = 0; i < classesSize; i++) {
     ratios[i] = (double*)malloc(2 * sizeof(double));
 
-    int a = classes[i][0];
-    int b = classes[i][1];
+    double a = classes[i][0];
+    double b = classes[i][1];
 
     if (a == b) {
       ratios[i][0] = DBL_MAX;
@@ -117,7 +117,7 @@ double maxAverageRatio(int** classes, int classesSize, int* classesColSize, int 
       continue;
     }
 
-    ratios[i][0] = (double)(b * (b + 1)) / (double)(b - a);
+    ratios[i][0] = b * (b + 1) / (b - a);
     ratios[i][1] = b;
   }
 
