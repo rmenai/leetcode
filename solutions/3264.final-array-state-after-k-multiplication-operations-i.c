@@ -102,6 +102,17 @@ void insert(heap* h, int* data) {
 }
 
 int* getFinalState(int* nums, int numsSize, int k, int multiplier, int* returnSize) {
-  int *hp = mn
+  int **clone = (int **)malloc(numsSize * sizeof(int *));
+  int **multipliedNums = (int *)malloc(numsSize * sizeof(int));
+
+  for (int i = 0; i < numsSize; i++) {
+    clone[i] = (int *)malloc(2 * sizeof(int));
+    clone[i][0] = nums[i];
+    clone[i][1] = i;
+  }
+
+  int *hp = createHeap(numsSize, clone);
+
+  return 
 }
 // @leet end
