@@ -1,14 +1,3 @@
 {
-  "rust-analyzer": {
-    "server": {
-      "statusNotifyLevel": "off"
-    },
-    "linkedProjects": [],
-    "cargo": {
-      "allFeatures": true
-    },
-    "checkOnSave": {
-      "command": "clippy"
-    }
-  }
+  "rustaceanvim.server.status_notify_level": "off"
 }
