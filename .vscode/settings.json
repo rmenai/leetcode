@@ -1,0 +1,14 @@
+{
+  "rust-analyzer": {
+    "server": {
+      "statusNotifyLevel": "off"
+    },
+    "linkedProjects": [],
+    "cargo": {
+      "allFeatures": true
+    },
+    "checkOnSave": {
+      "command": "clippy"
+    }
+  }
+}
