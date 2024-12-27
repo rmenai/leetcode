@@ -4,18 +4,37 @@ from typing import List
 # @leet start
 class Solution:
     def maxScoreSightseeingPair(self, values: List[int]) -> int:
-        keep = [(0, values[0])]
-        count = 0
-        j = 1
+        counter = []
+        last = values[0]
+        count = 1
         for i in range(1, len(values)):
-            if values[i] != values[i - 1]:
-                count = 0
+            if values[i] != last:
+                counter.append((last, count))
+                last = values[i]
+                count = 1
+            else:
+                count += 1
 
-            if count < 2:
-                keep.append((j, values[i]))
-                j += 1
+        if count > 0:
+            counter.append((values[-1], count))
 
-            count += 1
+        keep = []
+        j = 0
+        for val, count in counter:
+            if count < 4:
+                for _ in range(count):
+                    keep.append((j, val))
+                    j += 1
+            else:
+                for _ in range(2):
+                    keep.append((j, val))
+                    j += 1
+
+                j += count - 4
+
+                for _ in range(2):
+                    keep.append((j, val))
+                    j += 1
 
         keep.sort(key=lambda a: a[1], reverse=True)
 
@@ -36,4 +55,3 @@ class Solution:
 
 
 # @leet end
-
