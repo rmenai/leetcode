@@ -1,13 +1,14 @@
 #include <math.h>
+#include <stdint.h>
 
 // @leet start
 int waysToSplitArray(int* nums, int numsSize) {
-  int totalSum = 0;
+  long long totalSum = 0;
   for (int i = 0; i < numsSize; i++) {
     totalSum += nums[i];
   }
 
-  int leftSum = 0;
+  long long leftSum = 0;
   int count = 0;
   for (int i = 0; i < numsSize - 1; i++) {
     leftSum += nums[i];
