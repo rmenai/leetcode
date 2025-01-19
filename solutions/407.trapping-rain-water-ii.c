@@ -3,74 +3,139 @@
 #include <stdlib.h>
 
 // @leet start
-int min(int a, int b) {
-  if (a <= b) {
-    return a;
+#define WATER 2
+#define WALL 1
+#define EMPTY 3
+
+void drain(int ***map, int rows, int columns, int height, int y, int x) {
+  if (map[height][y][x] != WATER) {
+    return;
   }
 
-  return b;
-}
+  bool isEmpty = false;
 
-// On each call, we assume that we have the maximum water level of (i, j)
-void putWater(int **heightMap, int **waterLevel, int i, int j) {
-  int directions[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+  if (map[height - 1][y][x] == EMPTY) {
+    isEmpty = true;
+  }
+
+  int directions[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
   for (int k = 0; k < 4; k++) {
-    int ni = i + directions[k][0];
-    int nj = j + directions[k][1];
+    int dy = directions[k][0];
+    int dx = directions[k][1];
 
-    if (waterLevel[ni][nj] > waterLevel[i][j]) {
-      if (heightMap[ni][nj] >= heightMap[i][j]) {
-        waterLevel[ni][nj] = waterLevel[i][j];
-        putWater(heightMap, waterLevel, ni, nj);
+    int ny = y + dy;
+    int nx = x + dx;
+
+    if (!(ny >= 0 && nx >= 0 && ny < rows && nx < columns)) {
+      isEmpty = true;
+      continue;
+    }
+
+    if (map[height][ny][nx] == EMPTY) {
+      isEmpty = true;
+      continue;
+    }
+  }
+
+  if (isEmpty) {
+    map[height][y][x] = EMPTY;
+
+    for (int k = 0; k < 4; k++) {
+      int dy = directions[k][0];
+      int dx = directions[k][1];
+
+      int ny = y + dy;
+      int nx = x + dx;
+
+      if (!(ny >= 0 && nx >= 0 && ny < rows && nx < columns)) {
         continue;
       }
 
-      if (waterLevel[ni][nj] > heightMap[i][j]) {
-        waterLevel[ni][nj] = heightMap[i][j];
-        putWater(heightMap, waterLevel, ni, nj);
+      if (map[height][ny][nx] == WATER) {
+        drain(map, rows, columns, height, ny, nx);
       }
     }
   }
 }
 
+int ***initilizeMap(int maxHeight, int heightMapSize, int *heightMapColSize) {
+  int ***map = (int ***)malloc((maxHeight + 1) * sizeof(int **));
+
+  // Initilalize simulation
+  for (int height = 0; height <= maxHeight; height++) {
+    map[height] = (int **)malloc(heightMapSize * sizeof(int *));
+    for (int i = 0; i < heightMapSize; i++) {
+      map[height][i] = (int *)malloc(heightMapColSize[i] * sizeof(int));
+      for (int j = 0; j < heightMapColSize[i]; j++) {
+        map[height][i][j] = WATER;
+      }
+    }
+  }
+
+  return map;
+}
+
 int trapRainWater(int **heightMap, int heightMapSize, int *heightMapColSize) {
-  int rows = heightMapSize + 2;
-  int columns = heightMapColSize[0] + 2;
-
-  int **waterLevel = (int **)malloc(rows * sizeof(int *));
-  for (int i = 0; i < rows; i++) {
-    waterLevel[i] = (int *)malloc(columns * sizeof(int));
-    for (int j = 0; j < columns; j++) {
-      waterLevel[i][j] = INT_MAX;
+  int maxHeight = 0;
+  for (int i = 0; i < heightMapSize; i++) {
+    for (int j = 0; j < heightMapColSize[i]; j++) {
+      if (heightMap[i][j] > maxHeight) {
+        maxHeight = heightMap[i][j];
+      }
     }
   }
 
-  for (int i = 1; i < rows - 1; i++) {
-    waterLevel[i][1] = INT_MIN;
-    waterLevel[i][columns - 1] = INT_MIN;
+  // Fill simulation
+  int ***simulation = initilizeMap(maxHeight, heightMapSize, heightMapColSize);
 
-    putWater(heightMap, waterLevel, i, 1);
-    putWater(heightMap, waterLevel, i, columns - 1);
-  }
-  for (int j = 1; j < columns - 1; j++) {
-    waterLevel[1][j] = INT_MIN;
-    waterLevel[rows - 1][j] = INT_MIN;
-
-    putWater(heightMap, waterLevel, 1, j);
-    putWater(heightMap, waterLevel, rows - 1, j);
+  for (int i = 0; i < heightMapSize; i++) {
+    for (int j = 0; j < heightMapColSize[i]; j++) {
+      simulation[0][i][j] = WALL;
+    }
   }
 
+  for (int height = 1; height <= maxHeight; height++) {
+    for (int i = 0; i < heightMapSize; i++) {
+      for (int j = 0; j < heightMapColSize[i]; j++) {
+        if (height <= heightMap[i][j]) {
+          simulation[height][i][j] = WALL;
+        }
+      }
+    }
+  }
+
+  // Drain water
+  for (int height = 1; height <= maxHeight; height++) {
+    for (int i = 0; i < heightMapSize; i++) {
+      for (int j = 0; j < heightMapColSize[i]; j++) {
+        drain(simulation, heightMapSize, heightMapColSize[i], height, i, j);
+      }
+    }
+  }
+
+  // Calculate water volume
   int waterVolume = 0;
-  for (int i = 1; i < rows - 1; i++) {
-    for (int j = 1; j < columns - 1; j++) {
-      waterVolume += min(0, heightMap[i][j] - waterLevel[i][j]);
+  for (int height = 1; height <= maxHeight; height++) {
+    for (int i = 0; i < heightMapSize; i++) {
+      for (int j = 0; j < heightMapColSize[i]; j++) {
+        if (simulation[height][i][j] == WATER) {
+          waterVolume++;
+        }
+      }
     }
-
-    free(waterLevel[i]);
   }
 
-  free(waterLevel);
+  // Free array
+  for (int height = 0; height <= maxHeight; height++) {
+    for (int i = 0; i < heightMapSize; i++) {
+      free(simulation[height][i]);
+    }
+
+    free(simulation[height]);
+  }
+
+  free(simulation);
 
   return waterVolume;
 }
