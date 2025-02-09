@@ -1,18 +1,23 @@
 // @leet start
+use std::collections::HashMap;
+
 impl Solution {
     pub fn count_bad_pairs(nums: Vec<i32>) -> i64 {
-        let n = nums.len();
+        let mut counter = HashMap::new();
+        let mut good_pairs = 0;
 
-        let mut count = 0;
-        for i in 0..n - 1 {
-            for j in i + 1..n {
-                if j as i32 - i as i32 != nums[j] - nums[i] {
-                    count += 1;
-                }
+        for (i, &num) in nums.iter().enumerate() {
+            let key = num - i as i32;
+            if let Some(&count) = counter.get(&key) {
+                good_pairs += count;
             }
+            *counter.entry(key).or_insert(0) += 1;
         }
 
-        count
+        let n = nums.len() as i64;
+        let total_pairs = n * (n - 1) / 2;
+
+        total_pairs - good_pairs
     }
 }
 // @leet end
