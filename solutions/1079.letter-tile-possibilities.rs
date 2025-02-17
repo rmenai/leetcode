@@ -1,18 +1,28 @@
 // @leet start
-use std::collections::HashMap;
-
 impl Solution {
     pub fn num_tile_possibilities(tiles: String) -> i32 {
-        let fact = [1, 1, 2, 6, 24, 120, 720, 5040];
+        const ALPHABET_SIZE: usize = 26;
+        let mut freq = [0; ALPHABET_SIZE];
 
-        let mut freq = HashMap::new();
-        tiles.chars().for_each(|x| *freq.entry(x).or_insert(0) += 1);
+        for c in tiles.bytes() {
+            freq[(c - b'A') as usize] += 1;
+        }
 
-        let mut result: i64 = fact[tiles.len()];
-        freq.values().for_each(|&x| result /= fact[x as usize]);
+        fn dfs(freq: &mut [i32; ALPHABET_SIZE]) -> i32 {
+            let mut count = 0;
 
-        result as i32
+            for i in 0..ALPHABET_SIZE {
+                if freq[i] > 0 {
+                    freq[i] -= 1;
+                    count += 1 + dfs(freq);
+                    freq[i] += 1;
+                }
+            }
+
+            count
+        }
+
+        dfs(&mut freq)
     }
 }
 // @leet end
-
