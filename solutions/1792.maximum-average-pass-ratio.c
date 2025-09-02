@@ -14,8 +14,8 @@ typedef struct Heap heap;
 heap* createHeap(int capacity, double** nums);
 void insertHelper(heap* h, int index);
 void heapify(heap* h, int index);
-double *extractMin(heap* h);
-void insert(heap* h, double *data);
+double* extractMin(heap* h);
+void insert(heap* h, double* data);
 
 heap* createHeap(int capacity, double** nums) {
   heap* h = (heap*)malloc(sizeof(heap));
@@ -27,7 +27,7 @@ heap* createHeap(int capacity, double** nums) {
   h->size = 0;
   h->capacity = capacity;
 
-  h->arr = (double**)malloc(capacity * sizeof(double *));
+  h->arr = (double**)malloc(capacity * sizeof(double*));
 
   if (h->arr == NULL) {
     return NULL;
@@ -51,7 +51,7 @@ void insertHelper(heap* h, int index) {
   int parent = (index - 1) / 2;
 
   if (h->arr[parent][0] > (h->arr[index])[0]) {
-    double *temp = h->arr[parent];
+    double* temp = h->arr[parent];
     h->arr[parent] = h->arr[index];
     h->arr[index] = temp;
 
@@ -71,7 +71,7 @@ void heapify(heap* h, int index) {
   if (right != -1 && (h->arr[right])[0] < (h->arr[min])[0]) min = right;
 
   if (min != index) {
-    double *temp = h->arr[min];
+    double* temp = h->arr[min];
     h->arr[min] = h->arr[index];
     h->arr[index] = temp;
 
@@ -79,8 +79,8 @@ void heapify(heap* h, int index) {
   }
 }
 
-double *extractMin(heap* h) {
-  double *deleteItem;
+double* extractMin(heap* h) {
+  double* deleteItem;
 
   if (h->size == 0) {
     return NULL;
@@ -95,7 +95,7 @@ double *extractMin(heap* h) {
   return deleteItem;
 }
 
-void insert(heap* h, double *data) {
+void insert(heap* h, double* data) {
   if (h->size < h->capacity) {
     h->arr[h->size] = data;
     insertHelper(h, h->size);
@@ -121,10 +121,10 @@ double maxAverageRatio(int** classes, int classesSize, int* classesColSize, int 
     ratios[i][1] = b;
   }
 
-  heap *hp = createHeap(classesSize, ratios);
+  heap* hp = createHeap(classesSize, ratios);
 
   for (int _ = 0; _ < extraStudents; _++) {
-    double *class = extractMin(hp);
+    double* class = extractMin(hp);
     double b = class[1];
 
     class[0] *= (b + 2) / (b);
@@ -135,7 +135,7 @@ double maxAverageRatio(int** classes, int classesSize, int* classesColSize, int 
 
   double passRatio = 0;
   for (int _ = 0; _ < classesSize; _++) {
-    double *class = extractMin(hp);
+    double* class = extractMin(hp);
     double b = class[1];
     double ratio = 1 - ((b + 1) / class[0]);
 
